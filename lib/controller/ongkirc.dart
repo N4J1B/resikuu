@@ -74,10 +74,12 @@ class OngkirC extends GetxController {
 
   void clearasal() {
     asalC.text = "";
+    asalid.value = "";
   }
 
   void cleartujuan() {
     tujuanC.text = "";
+    tujuanid.value = "";
   }
 
   @override

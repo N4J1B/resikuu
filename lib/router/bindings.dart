@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:resikuu/controller/detailongkirc.dart';
 import 'package:resikuu/controller/detailresic.dart';
-import 'package:resikuu/data/service/local_service.dart';
 
 import '../controller/bookmarkc.dart';
 import '../controller/mainc.dart';
@@ -13,7 +12,6 @@ import '../data/service/api_service.dart';
 class RootBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<LocalService>(() => LocalService());
     Get.lazyPut<ApiService>(() => ApiService(dio: Dio()));
     Get.lazyPut<MainC>(() => MainC());
     Get.lazyPut<HomeC>(() => HomeC(apiserve: Get.find()));

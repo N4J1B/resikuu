@@ -69,6 +69,10 @@ class HomeScreen extends StatelessWidget {
                   menuStyle: MenuStyle(
                     backgroundColor: WidgetStatePropertyAll(Color(0xFFFFFFFF)),
                     side: WidgetStatePropertyAll(BorderSide(width: 0.3)),
+                    padding: WidgetStatePropertyAll(
+                        EdgeInsets.symmetric(horizontal: 10)),
+                    alignment: Alignment.bottomLeft,
+                    fixedSize: WidgetStatePropertyAll(Size(250, 250)),
                   ),
                   dropdownMenuEntries: Courier.list
                       .map(
@@ -139,33 +143,21 @@ class HomeScreen extends StatelessWidget {
         Container(
           margin: EdgeInsets.only(top: 20, right: 30, left: 40),
           alignment: Alignment.topCenter,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "Pencarian Terbaru",
-                style: TextStyle(
-                  color: Color(0x7B433535),
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              TextButton(
-                onPressed: () {},
-                child: Text(
-                  "Lihat Semua",
-                  style: TextStyle(color: Color(0xFFA7C9FB)),
-                ),
-              )
-            ],
+          child: Text(
+            "Pencarian Terbaru",
+            style: TextStyle(
+              color: Color(0x7B433535),
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
         Container(
           margin: EdgeInsets.only(bottom: 80),
-          child: h.storageList.isEmpty
-              ? Text("Tidak ada Riwayat Pencarian")
-              : Obx(
-                  () => Column(
+          child: Obx(
+            () => h.storageList.isEmpty
+                ? Text("Tidak ada Riwayat Pencarian")
+                : Column(
                     children: [
                       ...h.storageList.reversed.map(
                         (e) => GestureDetector(
@@ -227,7 +219,7 @@ class HomeScreen extends StatelessWidget {
                         ),
                     ],
                   ),
-                ),
+          ),
         ),
       ],
     );

@@ -86,8 +86,8 @@ class HomeC extends GetxController {
     );
     try {
       response = await apiserve.getResi(kurir.value, resiC.text);
-      Get.back();
       addAndStoreRecent(resiC.text, kurirC.text, kurir.value);
+      Get.back();
       Get.toNamed(RouteName.detailcek, arguments: [
         response.data.detail,
         response.data.history,
@@ -120,11 +120,11 @@ class HomeC extends GetxController {
 
   @override
   void onInit() {
-    super.onInit();
     resiC = TextEditingController();
     kurirC = TextEditingController();
     resiF = FocusNode();
     restoreRecents();
+    super.onInit();
   }
 
   @override
