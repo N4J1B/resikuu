@@ -31,7 +31,7 @@ Pengembang
 
 Project aplikasi ResiKuu untuk memenuhi tugas mata kuliah pemrograman mobile 
 
-Prodi pendidikan Teknologi informasi [Laman Resmi Prodi Pendidikan Teknologi Informasi](https://pendidikan-ti.ft.unesa.ac.id/)
+Prodi pendidikan Teknologi informasi [Laman Resmi Prodi Pendidikan Teknologi Informasi](https://pendidikan-ti.ft.unesa.ac.id/)\
 Universitas Negeri Surabaya [Laman Resmi Prodi Pendidikan Teknologi Informasi](https://unesa.ac.id)
 
 ## Preview Mobile App
