@@ -5,6 +5,8 @@ ResiKuu adalah aplikasi berbasis mobile yang dirancang untuk membantu pengguna d
 
 ResiKuu bertujuan untuk memberikan kemudahan bagi pengguna, baik pembeli maupun penjual online, dalam mengelola proses pengiriman barang. Aplikasi ini dirancang untuk meningkatkan efisiensi pelacakan pengiriman, mempermudah pengecekan ongkos kirim, dan membantu pengguna tetap terorganisir dalam aktivitas belanja atau penjualan online.
 
+Download Aplikasi : [Klik Disini](https://github.com/N4J1B/resikuu/blob/main/release/app-release.apk)
+
 ## Fungsi Aplikasi Cek Resi
 1. Pelacakan Resi: Memungkinkan pengguna untuk memeriksa dan memantau status pengiriman barang secara detail dengan memasukkan nomor resi dari berbagai jasa kurir.
 2. Cek Ongkos Kirim: Memberikan estimasi biaya pengiriman berdasarkan lokasi tujuan dan berat barang.
