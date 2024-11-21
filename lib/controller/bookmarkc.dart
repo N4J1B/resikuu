@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -12,42 +13,76 @@ class BookmarkC extends GetxController {
   final ApiService apiserve;
 
   BookmarkC({required this.apiserve});
-  final box = GetStorage();
-  var bookmarkList = [].obs;
+
+  final androidId = GetStorage().read("device").toString();
   late Resi response;
 
-  Future<void> addAndStoreBookmark(
-      String resi, String kurir, String kodekurir) async {
-    final Map storageMap = {};
+  Future<void> addBookmark(String resi, String kurir, String kodekurir) async {
+    try {
+      final deviceRef =
+          FirebaseFirestore.instance.collection('users').doc(androidId);
+      final bookmarksRef = deviceRef.collection('bookmarks');
 
-    storageMap["resi"] = resi;
-    storageMap["kurir"] = kurir;
-    storageMap["kodekurir"] = kodekurir;
+      final querySnapshot = await bookmarksRef
+          .where('resi', isEqualTo: resi)
+          .where('kurir', isEqualTo: kurir)
+          .get();
 
-    final existingIndex = bookmarkList.indexWhere(
-        (bookmark) => bookmark["resi"] == resi && bookmark["kurir"] == kurir);
-
-    if (existingIndex != -1) {
-      bookmarkList.removeAt(existingIndex);
-    } else {
-      if (bookmarkList.length >= 10) {
-        bookmarkList.removeAt(0);
+      if (querySnapshot.docs.isNotEmpty) {
+        print("Bookmark dengan resi $resi sudah ada.");
+      } else {
+        await bookmarksRef.add({
+          "resi": resi,
+          "kurir": kurir,
+          "kodekurir": kodekurir,
+          "timestamp": FieldValue.serverTimestamp(),
+        });
+        print("Bookmark baru dengan resi $resi berhasil disimpan.");
       }
+    } catch (e) {
+      print("Error saat menyimpan atau memperbarui data: $e");
     }
-    bookmarkList.add(storageMap);
-
-    await box.write('bookmark', bookmarkList);
   }
 
-  void remove(String resi, String kurir) async {
-    bookmarkList.removeWhere(
-        (bookmark) => bookmark["resi"] == resi && bookmark["kurir"] == kurir);
+  Stream<List<Map<String, dynamic>>> getBookmark() {
+    final deviceRef =
+        FirebaseFirestore.instance.collection('users').doc(androidId);
+    final bookmarksRef = deviceRef
+        .collection('bookmarks')
+        .orderBy('timestamp', descending: true);
 
-    box.write('bookmark', bookmarkList);
+    return bookmarksRef
+        .snapshots()
+        .map((snapshot) => snapshot.docs.map((doc) => doc.data()).toList());
   }
 
-  void restoreRecents() {
-    bookmarkList.value = (box.read('bookmark') ?? []);
+  Future<void> deleteBookmark(String resi, String kurir) async {
+    try {
+      final deviceRef =
+          FirebaseFirestore.instance.collection('users').doc(androidId);
+      final bookmarksRef = deviceRef.collection('bookmarks');
+
+      final querySnapshot = await bookmarksRef
+          .where('resi', isEqualTo: resi)
+          .where("kurir", isEqualTo: kurir)
+          .get();
+
+      await querySnapshot.docs[0].reference.delete();
+      print("Bookmark berhasil dihapus.");
+    } catch (e) {
+      print("Error saat menghapus data: $e");
+    }
+  }
+
+  Future<bool> cekstatus(String resi, String kurir) async {
+    final deviceRef =
+        FirebaseFirestore.instance.collection('users').doc(androidId);
+    final data = await deviceRef
+        .collection("bookmarks")
+        .where("resi", isEqualTo: resi)
+        .where("kurir", isEqualTo: kurir)
+        .get();
+    return data.docs.isNotEmpty;
   }
 
   Future<void> onclick(String resi, String kurir) async {
@@ -85,11 +120,5 @@ class BookmarkC extends GetxController {
       Get.back();
       Get.dialog(ErrorDialog(e: e));
     }
-  }
-
-  @override
-  void onInit() async {
-    restoreRecents();
-    super.onInit();
   }
 }

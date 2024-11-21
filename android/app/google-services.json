@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1022467481119",
+    "project_id": "resikuu-7f832",
+    "storage_bucket": "resikuu-7f832.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1022467481119:android:71941afd9c8b5e70533f2a",
+        "android_client_info": {
+          "package_name": "com.example.resikuu"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCzeZPQ5yGAnJx3HJ7Ywg47nD-rw6d0EIk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -154,71 +154,84 @@ class HomeScreen extends StatelessWidget {
         ),
         Container(
           margin: EdgeInsets.only(bottom: 80),
-          child: Obx(
-            () => h.storageList.isEmpty
-                ? Text("Tidak ada Riwayat Pencarian")
-                : Column(
-                    children: [
-                      ...h.storageList.reversed.map(
-                        (e) => GestureDetector(
-                          onTap: () =>
-                              h.ontap(e["kurir"], e["kodekurir"], e["resi"]),
-                          child: Container(
-                            alignment: Alignment.centerLeft,
-                            width: double.infinity,
-                            margin: EdgeInsets.symmetric(
-                              horizontal: 40,
-                              vertical: 7,
+          child: StreamBuilder(
+            stream: h.getRecent(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              if (snapshot.hasError) {
+                return Center(
+                  child: Text("Terjadi kesalahan: ${snapshot.error}"),
+                );
+              }
+              final recentSearches = snapshot.data;
+
+              if (recentSearches == null || recentSearches.isEmpty) {
+                return const Center(
+                  child: Text("Belum ada pencarian terbaru."),
+                );
+              }
+              return Column(
+                children: [
+                  ...recentSearches.take(10).map(
+                    (e) => GestureDetector(
+                      onTap: () =>
+                          h.ontap(e["kurir"], e["kodekurir"], e["resi"]),
+                      child: Container(
+                        alignment: Alignment.centerLeft,
+                        width: double.infinity,
+                        margin: EdgeInsets.symmetric(
+                          horizontal: 40,
+                          vertical: 7,
+                        ),
+                        padding: EdgeInsets.only(left: 20, right: 10),
+                        decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black38,
+                              spreadRadius: 0,
+                              blurRadius: 5,
                             ),
-                            padding: EdgeInsets.only(left: 20, right: 10),
-                            decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black38,
-                                  spreadRadius: 0,
-                                  blurRadius: 5,
-                                ),
-                              ],
-                              borderRadius: BorderRadius.circular(15),
-                              color: Color(0xFFFAFAFA),
-                              border: Border.all(
-                                color: Color.fromARGB(255, 146, 146, 146),
-                              ),
-                            ),
-                            height: 50,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  e["resi"],
-                                  style: TextStyle(),
-                                ),
-                                IconButton(
-                                  onPressed: () {
-                                    h.storageList.remove(e);
-                                    h.box.write('recent', h.storageList);
-                                  },
-                                  icon: Icon(Icons.delete, color: Colors.red),
-                                ),
-                              ],
-                            ),
+                          ],
+                          borderRadius: BorderRadius.circular(15),
+                          color: Color(0xFFFAFAFA),
+                          border: Border.all(
+                            color: Color.fromARGB(255, 146, 146, 146),
                           ),
+                        ),
+                        height: 50,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              e["resi"],
+                              style: TextStyle(),
+                            ),
+                            IconButton(
+                              onPressed: () =>
+                                  h.deleteRecentSearch(e["resi"], e["kurir"]),
+                              icon: Icon(Icons.delete, color: Colors.red),
+                            ),
+                          ],
                         ),
                       ),
-                      if (h.storageList.isNotEmpty)
-                        ElevatedButton(
-                          onPressed: () {
-                            h.storageList.clear();
-                            h.box.write('recent', h.storageList);
-                          },
-                          style: ElevatedButton.styleFrom(
-                            foregroundColor: Colors.white,
-                            backgroundColor: Colors.red,
-                          ),
-                          child: Text("Hapus Semua Riwayat"),
-                        ),
-                    ],
+                    ),
                   ),
+                  if (recentSearches.isNotEmpty)
+                    ElevatedButton(
+                      onPressed: h.deleteAllRecents,
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: Colors.red,
+                      ),
+                      child: Text("Hapus Semua Riwayat"),
+                    ),
+                ],
+              );
+            },
           ),
         ),
       ],
