@@ -18,29 +18,23 @@ class BookmarkC extends GetxController {
   late Resi response;
 
   Future<void> addBookmark(String resi, String kurir, String kodekurir) async {
-    try {
-      final deviceRef =
-          FirebaseFirestore.instance.collection('users').doc(androidId);
-      final bookmarksRef = deviceRef.collection('bookmarks');
+    final deviceRef =
+        FirebaseFirestore.instance.collection('users').doc(androidId);
+    final bookmarksRef = deviceRef.collection('bookmarks');
 
-      final querySnapshot = await bookmarksRef
-          .where('resi', isEqualTo: resi)
-          .where('kurir', isEqualTo: kurir)
-          .get();
+    final querySnapshot = await bookmarksRef
+        .where('resi', isEqualTo: resi)
+        .where('kurir', isEqualTo: kurir)
+        .get();
 
-      if (querySnapshot.docs.isNotEmpty) {
-        print("Bookmark dengan resi $resi sudah ada.");
-      } else {
-        await bookmarksRef.add({
-          "resi": resi,
-          "kurir": kurir,
-          "kodekurir": kodekurir,
-          "timestamp": FieldValue.serverTimestamp(),
-        });
-        print("Bookmark baru dengan resi $resi berhasil disimpan.");
-      }
-    } catch (e) {
-      print("Error saat menyimpan atau memperbarui data: $e");
+    if (querySnapshot.docs.isNotEmpty) {
+    } else {
+      await bookmarksRef.add({
+        "resi": resi,
+        "kurir": kurir,
+        "kodekurir": kodekurir,
+        "timestamp": FieldValue.serverTimestamp(),
+      });
     }
   }
 
@@ -57,21 +51,16 @@ class BookmarkC extends GetxController {
   }
 
   Future<void> deleteBookmark(String resi, String kurir) async {
-    try {
-      final deviceRef =
-          FirebaseFirestore.instance.collection('users').doc(androidId);
-      final bookmarksRef = deviceRef.collection('bookmarks');
+    final deviceRef =
+        FirebaseFirestore.instance.collection('users').doc(androidId);
+    final bookmarksRef = deviceRef.collection('bookmarks');
 
-      final querySnapshot = await bookmarksRef
-          .where('resi', isEqualTo: resi)
-          .where("kurir", isEqualTo: kurir)
-          .get();
+    final querySnapshot = await bookmarksRef
+        .where('resi', isEqualTo: resi)
+        .where("kurir", isEqualTo: kurir)
+        .get();
 
-      await querySnapshot.docs[0].reference.delete();
-      print("Bookmark berhasil dihapus.");
-    } catch (e) {
-      print("Error saat menghapus data: $e");
-    }
+    await querySnapshot.docs[0].reference.delete();
   }
 
   Future<bool> cekstatus(String resi, String kurir) async {

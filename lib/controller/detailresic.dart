@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:resikuu/controller/bookmarkc.dart';
 import 'package:resikuu/data/model/resi.dart';

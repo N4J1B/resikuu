@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -24,40 +23,35 @@ class HomeC extends GetxController {
   final androidId = GetStorage().read("device").toString();
 
   Future<void> addRecent(String resi, String kurir, String kodekurir) async {
-    try {
-      final deviceRef = FirebaseFirestore.instance.collection('users').doc(androidId);
-      final recentSearchesRef = deviceRef.collection('recents');
+    final deviceRef =
+        FirebaseFirestore.instance.collection('users').doc(androidId);
+    final recentSearchesRef = deviceRef.collection('recents');
 
-      final querySnapshot = await recentSearchesRef
-          .where('resi', isEqualTo: resi)
-          .where('kurir', isEqualTo: kurir)
-          .get();
+    final querySnapshot = await recentSearchesRef
+        .where('resi', isEqualTo: resi)
+        .where('kurir', isEqualTo: kurir)
+        .get();
 
-      if (querySnapshot.docs.isNotEmpty) {
-        await querySnapshot.docs[0].reference.update({
-          "timestamp": FieldValue.serverTimestamp(),
-          "kurir": kurir, // Opsional: Perbarui data lainnya jika diperlukan
-          "kodekurir": kodekurir,
-        });
-        print("Data dengan resi $resi sudah ada, timestamp diperbarui.");
-      } else {
-        // Jika data dengan resi tersebut tidak ada, kita tambahkan data baru
-        await recentSearchesRef.add({
-          "resi": resi,
-          "kurir": kurir,
-          "kodekurir": kodekurir,
-          "timestamp": FieldValue.serverTimestamp(),
-        });
-
-        print("Data baru dengan resi $resi berhasil disimpan.");
-      }
-    } catch (e) {
-      print("Error saat menyimpan atau memperbarui data: $e");
+    if (querySnapshot.docs.isNotEmpty) {
+      await querySnapshot.docs[0].reference.update({
+        "timestamp": FieldValue.serverTimestamp(),
+        "kurir": kurir, // Opsional: Perbarui data lainnya jika diperlukan
+        "kodekurir": kodekurir,
+      });
+    } else {
+      // Jika data dengan resi tersebut tidak ada, kita tambahkan data baru
+      await recentSearchesRef.add({
+        "resi": resi,
+        "kurir": kurir,
+        "kodekurir": kodekurir,
+        "timestamp": FieldValue.serverTimestamp(),
+      });
     }
   }
 
   Stream<List<Map<String, dynamic>>> getRecent() {
-    final deviceRef = FirebaseFirestore.instance.collection('users').doc(androidId);
+    final deviceRef =
+        FirebaseFirestore.instance.collection('users').doc(androidId);
     final recentSearchesRef =
         deviceRef.collection('recents').orderBy('timestamp', descending: true);
 
@@ -67,36 +61,27 @@ class HomeC extends GetxController {
   }
 
   Future<void> deleteRecentSearch(String resi, String kurir) async {
-    try {
-      final deviceRef = FirebaseFirestore.instance.collection('users').doc(androidId);
-      final recentSearchesRef = deviceRef.collection('recents');
+    final deviceRef =
+        FirebaseFirestore.instance.collection('users').doc(androidId);
+    final recentSearchesRef = deviceRef.collection('recents');
 
-      final querySnapshot = await recentSearchesRef
-          .where('resi', isEqualTo: resi)
-          .where("kurir", isEqualTo: kurir)
-          .get();
+    final querySnapshot = await recentSearchesRef
+        .where('resi', isEqualTo: resi)
+        .where("kurir", isEqualTo: kurir)
+        .get();
 
-      await querySnapshot.docs[0].reference.delete();
-      print("Dokumen berhasil dihapus.");
-    } catch (e) {
-      print("Error saat menghapus data: $e");
-    }
+    await querySnapshot.docs[0].reference.delete();
   }
 
   Future<void> deleteAllRecents() async {
-    try {
-      final deviceRef = FirebaseFirestore.instance.collection('users').doc(androidId);
-      final recentSearchesRef = deviceRef.collection('recents');
+    final deviceRef =
+        FirebaseFirestore.instance.collection('users').doc(androidId);
+    final recentSearchesRef = deviceRef.collection('recents');
 
-      final snapshot = await recentSearchesRef.get();
+    final snapshot = await recentSearchesRef.get();
 
-      for (var doc in snapshot.docs) {
-        await doc.reference.delete();
-      }
-
-      print("Semua dokumen dalam koleksi 'recent' berhasil dihapus.");
-    } catch (e) {
-      print("Error saat menghapus data: $e");
+    for (var doc in snapshot.docs) {
+      await doc.reference.delete();
     }
   }
 
@@ -165,8 +150,6 @@ class HomeC extends GetxController {
   @override
   Future<void> onInit() async {
     super.onInit();
-    
-    print("selesai");
   }
 
   @override
